@@ -14,6 +14,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { useState } from 'react';
+import { getFirestore, collection, addDoc, getDocs } from 'firebase/firestore';
+import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
+import { initializeApp } from 'firebase/app';
 
 const DashboardLayout = ({
     children
@@ -35,7 +38,7 @@ const DashboardLayout = ({
     const [description, setDescription] = useState("")
     const [time, setTime] = useState("")
     const [dosage, setDosage] = useState("")
-    const [image, setImage] = useState("")
+    const [image, setImage] = useState<string | null>(null);
     // Function to convert AM/PM time to 24-hour format
     const convertTo24HourFormat = (time: string) => {
         const [hour, minute, period] = time.split(/:| /);
@@ -48,21 +51,111 @@ const DashboardLayout = ({
         return `${hour24.toString().padStart(2, '0')}:${minute}`;
     };
 
-    function add_to_med(e: any) {
-        console.log("add_to_med")
+    const add_to_med = async (e: any) => {
         e.preventDefault();
-        setMedicationData([
-            ...medData,
-            {
-                id: medData.length + 1,
-                imageSrc: image,
-                name: name,
-                description: description,
-                time: time,
-                dosage: dosage,
-            },
-        ]);
-    }
+
+        try {
+            if (image) {
+                const file = new File([image], image.name); // Create a File object with the correct type and name
+
+                // Upload the image file to Firebase Storage
+                const storageRef = ref(storage, `images/${file.name}`);
+                await uploadBytes(storageRef, file);
+
+                // Get the download URL of the uploaded image
+                const downloadURL = await getDownloadURL(storageRef);
+
+                // Add the medication data to the medData state
+                setMedicationData([
+                    ...medData,
+                    {
+                        id: medData.length + 1,
+                        imageSrc: downloadURL,
+                        name: name,
+                        description: description,
+                        time: time,
+                        dosage: dosage,
+                    },
+                ]);
+
+                // Store the medication data in Firebase Firestore
+                storeDataToFirebase();
+            }
+        } catch (error) {
+            console.error('Error adding medication data:', error);
+        }
+    };
+
+    // Initialize Firebase app
+    const firebaseConfig = {
+        apiKey: "AIzaSyDaTHJahdGqnCMFNH8JtEUdNo97p8eglUw",
+        authDomain: "pushin-pill.firebaseapp.com",
+        databaseURL: "https://pushin-pill-default-rtdb.firebaseio.com",
+        projectId: "pushin-pill",
+        storageBucket: "pushin-pill.appspot.com",
+        messagingSenderId: "209811412566",
+        appId: "1:209811412566:web:9ec7be84d75f9cbf73cdf7",
+        measurementId: "G-7Z24F09YWE"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const firestore = getFirestore();
+    const storage = getStorage();
+
+    const storeDataToFirebase = async () => {
+        try {
+            // Create a new collection in Firestore
+            const medicationsCollection = collection(firestore, 'medications');
+
+            // Loop through each medication in medData
+            for (const medication of medData) {
+                // Upload the image to Firebase Storage
+                const storageRef = ref(storage, `medicationImages/${medication.image.name}`);
+                await uploadBytes(storageRef, medication.image);
+
+                // Get the download URL of the uploaded image
+                const downloadURL = await getDownloadURL(storageRef);
+
+                // Create a new document in Firestore with the medication data
+                await addDoc(medicationsCollection, {
+                    name: medication.name,
+                    description: medication.description,
+                    time: medication.time,
+                    dosage: medication.dosage,
+                    image: downloadURL,
+                });
+            }
+
+            console.log('Data stored successfully in Firebase Firestore!');
+        } catch (error) {
+            console.error('Error storing data in Firebase Firestore:', error);
+        }
+    };
+
+    const fetchMedicationDataFromFirebase = async () => {
+        try {
+            // Create a reference to the "medications" collection in Firestore
+            const medicationsCollection = collection(firestore, 'medications');
+
+            // Fetch all documents from the "medications" collection
+            const querySnapshot = await getDocs(medicationsCollection);
+
+            // Map the query snapshot to an array of medication objects
+            const medicationData: { id: number; imageSrc: string; name: string; description: string; time: string; dosage: string; }[] = querySnapshot.docs.map((doc) => doc.data() as { id: number; imageSrc: string; name: string; description: string; time: string; dosage: string; });
+
+            // Update the medData state with the fetched medication data
+            setMedicationData(medicationData);
+
+            console.log('Medication data fetched successfully from Firebase Firestore!');
+        } catch (error) {
+            console.error('Error fetching medication data from Firebase Firestore:', error);
+        }
+    };
+
+    storeDataToFirebase();
+
+
     return (
         // <div className = "h-full relative">
         //     <main>
@@ -179,7 +272,7 @@ const DashboardLayout = ({
                                             id="image"
                                             type="file"
                                             required
-                                            value={image}
+                                            value={image || ''}
                                             className="col-span-3"
                                             onChange={(e) => setImage(e.target.value)}
                                         />
