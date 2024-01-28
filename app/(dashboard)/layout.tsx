@@ -1,8 +1,30 @@
+import React from 'react';
+import MedicationCard from "@/components/ui/medicationCard";
+
 const DashboardLayout = ({
     children
 }: {
     children: React.ReactNode;
 }) => {
+    const medicationData = [
+        { id: 1, imageSrc: '/images/LPN05141.jpg', name: 'Lisinopril', description: 'High blood pressure', time: '10:00 AM', dosage: '10mg' },
+        { id: 2, imageSrc: '/images/s-l1200.webp', name: 'Ibuprofen', description: 'Pain relief', time: '11:00 AM', dosage: '200mg' },
+
+      ];
+
+
+      // Function to convert AM/PM time to 24-hour format
+      const convertTo24HourFormat = (time: string) => {
+        const [hour, minute, period] = time.split(/:| /);
+        let hour24 = parseInt(hour, 10);
+        if (period === 'PM' && hour24 !== 12) {
+          hour24 += 12;
+        } else if (period === 'AM' && hour24 === 12) {
+          hour24 = 0;
+        }
+        return `${hour24.toString().padStart(2, '0')}:${minute}`;
+      };
+
     return ( 
         // <div className = "h-full relative">
         //     <main>
@@ -44,39 +66,22 @@ const DashboardLayout = ({
                     <div className="text-teal-600 text-xs font-normal font-['Inter']">Add New Medication</div>
                 </div>
                 
-                {/* card */}
-                <div className="flex flex-row pr-6 h-[125px] border rounded-lg border-emerald-50">
-                    <div className="MedImage pl-1.5 pt-1.5 pr-1.5 pb-1.5">
-                        <img className=" rounded-lg w-[110px] h-[110px]" src="https://via.placeholder.com/125x125" />
-                    </div>
-                    
-                    <div className="pl-1 flex flex-col">
-                        {/* name & description */}
-                        <div className="DrugName w-full pt-4 pb-0.5 text-gray-900 text-lg font-semibold font-['Inter']">Lisinopril</div>
-                        <div className="DrugDescription w-full pb-0.5 text-zinc-400 text-xs font-medium font-['Inter']">High blood pressure</div>
-                        
-                        <div className="w-fit">
-                            {/* time */}
-                            <div className="flex GreenBox pl-2 pr-2 w-full h-fit pt-1 pb-1 bg-emerald-50 rounded-sm">
-                                {/* <img className="w-[11px] h-[11px] " src="https://via.placeholder.com/11x10" /> */}
-                                <i className="fas fa-clock text-sm" style={{ color: '#199A8E' }}></i>
-                                <div className="pl-1 text-teal-600 text-xs font-medium font-['Inter']">
-                                    9:00 AM
-                                </div>
-                            </div>
-
-                            {/* dosage */}
-                            <div className="flex OrangeBox mt-1 pl-2 pr-2 w-fit h-fit pt-1 pb-1 bg-orange-50 rounded-sm">
-                                {/* <img className="w-[11px] h-[11px] " src="https://via.placeholder.com/11x10" /> */}
-                                <i className="fas fa-prescription-bottle" style={{ color: "orange" }}></i>
-                                <div className="pl-1 text-orange-600 text-xs font-medium font-['Inter']">
-                                    10mg
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
+                {medicationData
+                .sort((a, b) => {
+                const timeA = convertTo24HourFormat(a.time);
+                const timeB = convertTo24HourFormat(b.time);
+                return timeA.localeCompare(timeB);
+            })
+            .map((medication) => (
+                    <MedicationCard
+                        key={medication.id}
+                        imageSrc={medication.imageSrc}
+                        name={medication.name}
+                        description={medication.description}
+                        time={medication.time}
+                        dosage={medication.dosage}
+                    />
+                ))}
             </div>
 
             {/* flexgrow fill */}
