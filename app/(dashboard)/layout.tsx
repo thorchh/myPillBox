@@ -40,6 +40,7 @@ const DashboardLayout = ({
     const [time, setTime] = useState("")
     const [dosage, setDosage] = useState("")
     const [image, setImage] = useState<string | null>(null);
+    const [searchQuery, setSearchQuery] = useState('');
 
     // const dbref = collection[db, 'drugs'];
     // Function to convert AM/PM time to 24-hour format
@@ -64,7 +65,7 @@ const DashboardLayout = ({
                 ...medData,
                 {
                     id: medData.length + 1,
-                    imageSrc: "/images/LPN05141.jpg",
+                    imageSrc:'/images/LPN05141.jpg',
                     name: name,
                     description: description,
                     time: time,
@@ -75,7 +76,7 @@ const DashboardLayout = ({
             // Store the medication data in Firebase Firestore
             storeDataToFirebase(
                 medData.length + 1,
-                "",
+                image || '',
                 name,
                 description,
                 time,
@@ -85,6 +86,11 @@ const DashboardLayout = ({
             console.error('Error adding medication data:', error);
         }
     };
+
+    //search functionality
+    const filteredMedication = medicationData.filter((medication) =>
+        medication.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     // Initialize Firebase app
     const firebaseConfig = {
@@ -129,6 +135,29 @@ const DashboardLayout = ({
             throw error;
         }
     };
+
+    const [selectedImage, setSelectedImage] = useState(null);
+
+    const handleImageUpload = async (event:any) => {
+        const file = event.target.files[0];
+        setSelectedImage(file);
+
+        // Call the API function after the image is selected
+        await callAPI(file);
+    };
+
+    function callAPI(file: any) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        fetch('/predict', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+    }
 
     const storeDataToFirebase = async (
         id: number,
@@ -220,13 +249,17 @@ const DashboardLayout = ({
                 {/* search bar */}
                 <div className="flex pl-2 pt-2 pb-2 w-full h-fit bg-neutral-50 rounded-3xl border border-slate-50">
                     <i className="fas fa-search text-sm" ></i>
-                    <input type="text" className="pl-2 w-full bg-neutral-50 text-zinc-400 text-xs font-normal font-['Inter']" placeholder="Search through your medication" />
+                    <input type="text"
+                    className="pl-2 w-full bg-neutral-50 text-zinc-400 text-xs font-normal font-['Inter']"
+                    placeholder="Search through your medication" 
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}/>
                 </div>
 
             </div>
 
-            {/* call fetchMedicationDataFromFirebase */}
-            <button onClick={fetchMedicationDataFromFirebase}>Fetch Medication Data From Firebase</button>
+            {/* call fetchMedicationDataFromFirebase
+            <button onClick={fetchMedicationDataFromFirebase}>Fetch Medication Data From Firebase</button> */}
 
             {/* list */}
             <div className="flex flex-col pl-6 pr-6">
@@ -240,7 +273,7 @@ const DashboardLayout = ({
 
                     {/* add new medication popup button */}
                     {/* example: { id: 2, imageSrc: '/images/s-l1200.webp', name: 'Ibuprofen', description: 'Pain relief', time: '9:00 AM', dosage: '200mg' }, */}
-                    <Dialog >
+                    <Dialog>
                         <DialogTrigger className="flex items-center text-teal-600 text-xs font-normal font-['Inter']">
                             Add New Medication</DialogTrigger>
                         <DialogContent className="sm:max-w-[425px]" >
@@ -360,7 +393,7 @@ const DashboardLayout = ({
                     <label htmlFor="camera-input">
                         <i className="fas fa-camera"></i>
                     </label>
-                    <input id="camera-input" type="file" accept="image/*" capture="environment" className="hidden" />
+                    <input id="camera-input" type="file" accept="image/*" capture="environment" onChange={handleImageUpload}  className="hidden" />
                 </div>
                 <div className="w-6 h-6 relative">
                     <div className="text-gray-500 hover:text-gray-700 flex flex-center text-sm ">
