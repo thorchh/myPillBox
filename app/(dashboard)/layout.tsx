@@ -89,23 +89,21 @@ const DashboardLayout = ({
 
             {/* Navbar */}
 
-            <div className="w-full pb-4.5 fixed bottom-0 left-0 shadow-md flex content-around justify-around items-center">
-                <div className="w-6 h-6 relative">
-                    <i className="fas fa-home"></i>
-                </div>
-                <div className="w-6 h-6 relative">
-                    <label htmlFor="camera-input">
-                        <i className="fas fa-camera"></i>
-                    </label>
-                    <input id="camera-input" type="file" accept="image/*" capture="environment" className="hidden" />
-                </div>
-                <div className="w-6 h-6 relative">
-                    <i className="fas fa-user"></i>
-                </div>
-            </div>
-
-
+        <div className="w-full pb-4.5 fixed bottom-0 left-0 shadow-md flex content-around justify-around items-center">
+        <div className="w-6 h-6 relative">
+            <i className="fas fa-home"></i>
         </div>
+        <div className="w-6 h-6 relative">
+            <label htmlFor="camera-input">
+                <i className="fas fa-camera"></i>
+            </label>
+            <input id="camera-input" type="file" accept="image/*" capture="environment" className="hidden" />
+        </div>
+        <div className="w-6 h-6 relative">
+            <i className="fas fa-user"></i>
+        </div>
+        </div>
+    </div>
             
      );
 }
