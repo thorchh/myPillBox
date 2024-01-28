@@ -8,7 +8,12 @@ const DashboardLayout = ({
 }) => {
     const medicationData = [
         { id: 1, imageSrc: '/images/LPN05141.jpg', name: 'Lisinopril', description: 'High blood pressure', time: '10:00 AM', dosage: '10mg' },
-        { id: 2, imageSrc: '/images/s-l1200.webp', name: 'Ibuprofen', description: 'Pain relief', time: '11:00 AM', dosage: '200mg' },
+        { id: 2, imageSrc: '/images/s-l1200.webp', name: 'Ibuprofen', description: 'Pain relief', time: '9:00 AM', dosage: '200mg' },
+        { id: 3, imageSrc: '/images/s-l1200.webp', name: 'Ibuprofen', description: 'Pain relief', time: '11:00 AM', dosage: '200mg' },
+        { id: 4, imageSrc: '/images/s-l1200.webp', name: 'Ibuprofen', description: 'Pain relief', time: '11:00 AM', dosage: '200mg' },
+        { id: 5, imageSrc: '/images/s-l1200.webp', name: 'Ibuprofen', description: 'Pain relief', time: '11:00 AM', dosage: '200mg' },
+        { id: 6, imageSrc: '/images/s-l1200.webp', name: 'Ibuprofen', description: 'Pain relief', time: '11:00 AM', dosage: '200mg' },
+        { id: 7, imageSrc: '/images/s-l1200.webp', name: 'Ibuprofen', description: 'Pain relief', time: '11:00 AM', dosage: '200mg' },
 
       ];
 
@@ -42,9 +47,8 @@ const DashboardLayout = ({
             <div className="pl-6 pt-10 pb-6 pr-6">
 
                 {/* header */}
-                <div className="text-gray-900 text-[24px] font-bold font-['Inter']">
-                    Simplify Medication - <br/>Trust Medication
-                </div>
+                <div className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-cyan-600 text-[24px] font-bold font-['Inter']">
+                    Simplify Medication - <br/>Trust Medication</div>
                     
                 
                 {/* search bar */}
@@ -62,8 +66,10 @@ const DashboardLayout = ({
 
                 {/* text and see all */}
                 <div className="flex flex-row justify-between">
-                    <div className="text-gray-900 text-base font-semibold font-['Inter']">Your Medication</div>
-                    <div className="text-teal-600 text-xs font-normal font-['Inter']">Add New Medication</div>
+                    
+                    <div className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-sky-600 text-base font-semibold font-['Inter']">Your Medication</div>
+                    <div className="flex items-center text-teal-600 text-xs font-normal font-['Inter']">Add New Medication</div>
+                
                 </div>
                 
                 {medicationData
@@ -89,21 +95,21 @@ const DashboardLayout = ({
 
             {/* Navbar */}
 
-        <div className="w-full pb-4.5 fixed bottom-0 left-0 shadow-md flex content-around justify-around items-center">
-        <div className="w-6 h-6 relative">
-            <i className="fas fa-home"></i>
+            <div className="w-full pb-4.5 fixed bottom-0 left-0 shadow-md flex content-around justify-around items-center">
+                <div className="w-6 h-6 relative">
+                    <i className="fas fa-home"></i>
+                </div>
+                <div className="w-6 h-6 relative">
+                    <label htmlFor="camera-input">
+                        <i className="fas fa-camera"></i>
+                    </label>
+                    <input id="camera-input" type="file" accept="image/*" capture="environment" className="hidden" />
+                </div>
+                <div className="w-6 h-6 relative">
+                    <i className="fas fa-user"></i>
+                </div>
+            </div>
         </div>
-        <div className="w-6 h-6 relative">
-            <label htmlFor="camera-input">
-                <i className="fas fa-camera"></i>
-            </label>
-            <input id="camera-input" type="file" accept="image/*" capture="environment" className="hidden" />
-        </div>
-        <div className="w-6 h-6 relative">
-            <i className="fas fa-user"></i>
-        </div>
-        </div>
-    </div>
             
      );
 }
