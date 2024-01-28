@@ -26,7 +26,7 @@ const DashboardLayout = ({
                 {/* search bar */}
                 <div className="flex flex-row justify-around pt-4 pr-6">
                     <img className="w-[11px] h-[11px] flex" src="https://via.placeholder.com/11x10" />
-                    <input type="text" className="w-full h-10 bg-neutral-50 rounded-3xl border border-emerald-50 pl-12 text-zinc-400 text-xs font-normal font-['Inter']" placeholder="Search through your medication"/>
+                    <input type="text" className="w-full h-10 bg-neutral-50 rounded-3xl border border-slate-50 pl-12 text-zinc-400 text-xs font-normal font-['Inter']" placeholder="Search through your medication"/>
                 </div>
 
             </div>
@@ -54,9 +54,9 @@ const DashboardLayout = ({
                         <div className="DrugDescription w-full pb-0.5 text-zinc-400 text-xs font-medium font-['Inter']">High blood pressure</div>
                         
                         {/* time */}
-                        <div className="flex GreenBox h-[18px] bg-emerald-50 rounded-sm">
+                        <div className="flex GreenBox pl-2 pr-2 w-fit h-fit pt-1 pb-1 bg-emerald-50 rounded-sm">
                             <img className="w-[11px] h-[11px] " src="https://via.placeholder.com/11x10" />
-                            <div className=" text-teal-600 text-xs font-medium font-['Inter']">9:00 AM</div>
+                            <div className="pl-1 text-teal-600 text-xs font-medium font-['Inter']">9:00 AM</div>
                         </div>
                     </div>
                 </div>
