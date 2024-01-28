@@ -17,6 +17,7 @@ import { useState } from 'react';
 import { getFirestore, collection, addDoc, getDocs } from 'firebase/firestore';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import { initializeApp } from 'firebase/app';
+import { UserButton } from '@clerk/nextjs';
 
 const DashboardLayout = ({
     children
@@ -157,15 +158,6 @@ const DashboardLayout = ({
 
 
     return (
-        // <div className = "h-full relative">
-        //     <main>
-        //         MAIN CONTENT ( Medication)
-        //         {children}
-        //     </main>
-        //     <div>
-        //         NAVBAR
-        //     </div>
-        // </div>
 
         <div className="flex flex-col min-h-screen" >
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
@@ -311,7 +303,7 @@ const DashboardLayout = ({
 
             {/* Navbar */}
 
-            <div className="w-full pb-4.5 fixed bottom-0 left-0 shadow-md flex content-around justify-around items-center">
+            <div className="w-full pb-4.5 fixed bottom-0 left-0 shadow-md flex content-around justify-around bg-white pt-2 pb-2 items-center">
                 <div className="w-6 h-6 relative">
                     <i className="fas fa-home"></i>
                 </div>
@@ -322,7 +314,13 @@ const DashboardLayout = ({
                     <input id="camera-input" type="file" accept="image/*" capture="environment" className="hidden" />
                 </div>
                 <div className="w-6 h-6 relative">
-                    <i className="fas fa-user"></i>
+                    <div className="text-gray-500 hover:text-gray-700 flex flex-center text-sm ">
+                        {/* cleark UserButton styled to be small */}
+                        <UserButton afterSignOutUrl="/" />
+                        {/* <i className="fas fa-user"></i> */}
+                    </div>
+
+
                 </div>
             </div>
         </div>
