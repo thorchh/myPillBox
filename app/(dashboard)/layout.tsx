@@ -18,6 +18,7 @@ import { getFirestore, collection, addDoc, getDocs } from 'firebase/firestore';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import { initializeApp } from 'firebase/app';
 import { UserButton } from '@clerk/nextjs';
+import Popup from '@/components/ui/popup';
 
 const DashboardLayout = ({
     children
@@ -45,6 +46,8 @@ const DashboardLayout = ({
     // const dbref = collection[db, 'drugs'];
     // Function to convert AM/PM time to 24-hour format
     const convertTo24HourFormat = (time: string) => {
+        if (!time) return '0';
+
         const [hour, minute, period] = time.split(/:| /);
         let hour24 = parseInt(hour, 10);
         if (period === 'PM' && hour24 !== 12) {
@@ -94,12 +97,12 @@ const DashboardLayout = ({
 
     // Initialize Firebase app
     const firebaseConfig = {
-        apiKey: "AIzaSyBkoj3P-bzyGlAc8EAe7DsLag6l0AvUgsE",
-        authDomain: "mypillbox-9367d.firebaseapp.com",
-        projectId: "mypillbox-9367d",
-        storageBucket: "mypillbox-9367d.appspot.com",
-        messagingSenderId: "521207572117",
-        appId: "1:521207572117:web:babbb812082e5d87b15d9c"
+          apiKey: "AIzaSyBRjIJ877X8ZiWl_eVMusQO3IrqSCw6YAM",
+          authDomain: "pillboxxxx-b46fe.firebaseapp.com",
+          projectId: "pillboxxxx-b46fe",
+          storageBucket: "pillboxxxx-b46fe.appspot.com",
+          messagingSenderId: "868397628436",
+          appId: "1:868397628436:web:ecd3723dcd8495f7e2bb01"
     };
 
     // Initialize Firebase
@@ -137,7 +140,7 @@ const DashboardLayout = ({
     };
 
     const [selectedImage, setSelectedImage] = useState(null);
-    const [imageResponse, setImageResponse] = useState(null)
+    const [detectedPills, setDetectedPills] = useState(null)
 
     const handleImageUpload = async (event:any) => {
         const file = event.target.files[0];
@@ -151,19 +154,25 @@ const DashboardLayout = ({
         const formData = new FormData();
         formData.append('file', file);
 
-        const response = await fetch('/api/predict', {
+        const response = await fetch('http://34.71.115.165/predict', {
             method: 'POST',
             body: formData,
         });
 
         if (!response.ok) {
             console.log('Error');
+            console.log(response);
             return;
         }
 
         const data = await response.json();
         console.log(data);
-        setImageResponse(data);
+        const pills = data.map((pill: any) => {
+            return pill.name;
+        });
+
+        console.log(pills)
+        setDetectedPills(pills);
     }
 
     const storeDataToFirebase = async (
@@ -246,6 +255,15 @@ const DashboardLayout = ({
         <div className="flex flex-col min-h-screen" >
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
+            {
+                detectedPills && 
+                <div className="absolute z-1">
+                    <Popup pills={detectedPills} changeState={() => {
+                        setDetectedPills(null);
+                    }}/>
+                </div>
+            }
+
             <div className="pl-6 pt-10 pb-6 pr-6">
 
                 {/* header */}
@@ -288,7 +306,7 @@ const DashboardLayout = ({
                                 <DialogHeader>
                                     <DialogTitle>Add New Medication</DialogTitle>
                                     <DialogDescription>
-                                        Fill out the information for the new medication. Click save when you're done.
+                                        Fill out the information for the new medication. Click save when you&apos;re done.
                                     </DialogDescription>
                                 </DialogHeader>
                                 <div className="grid gap-4 py-4">
@@ -378,7 +396,7 @@ const DashboardLayout = ({
                     .map((medication) => (
                         <MedicationCard
                             key={medication.id}
-                            imageSrc={medication.imageSrc}
+                            imageSrc={"/images/IMG" + medication.name.toLocaleLowerCase() + ".jpeg"}
                             name={medication.name}
                             description={medication.description}
                             time={medication.time}

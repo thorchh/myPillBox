@@ -16,9 +16,9 @@ export const LandingNavbar = () => {
   return (
     <nav className="p-4 bg-transparent flex items-center justify-between">
       <Link href="/" className="flex items-center">
-        <div className="relative h-8 w-8 mr-4">
+        {/* <div className="relative h-8 w-8 mr-4">
           <Image fill alt="Logo" src="/logo.png" />
-        </div>
+        </div> */}
         {/* <div className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-cyan-600"></div> */}
         <h1 className={cn("text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-cyan-600", font.className)}>
           myPillBox
