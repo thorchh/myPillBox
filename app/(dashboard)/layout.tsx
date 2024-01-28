@@ -26,12 +26,12 @@ const DashboardLayout = ({
 }) => {
     const medicationData = [
         { id: 1, imageSrc: '/images/LPN05141.jpg', name: 'Lisinopril', description: 'High blood pressure', time: '10:00 AM', dosage: '10mg' },
-        { id: 2, imageSrc: '/images/s-l1200.webp', name: 'Ibuprofen', description: 'Pain relief', time: '9:00 AM', dosage: '200mg' },
-        { id: 3, imageSrc: '/images/s-l1200.webp', name: 'Ibuprofen', description: 'Pain relief', time: '11:00 AM', dosage: '200mg' },
-        { id: 4, imageSrc: '/images/s-l1200.webp', name: 'Ibuprofen', description: 'Pain relief', time: '11:00 AM', dosage: '200mg' },
-        { id: 5, imageSrc: '/images/s-l1200.webp', name: 'Ibuprofen', description: 'Pain relief', time: '11:00 AM', dosage: '200mg' },
-        { id: 6, imageSrc: '/images/s-l1200.webp', name: 'Ibuprofen', description: 'Pain relief', time: '11:00 AM', dosage: '200mg' },
-        { id: 7, imageSrc: '/images/s-l1200.webp', name: 'Ibuprofen', description: 'Pain relief', time: '11:00 AM', dosage: '200mg' },
+        // { id: 2, imageSrc: '/images/s-l1200.webp', name: 'Ibuprofen', description: 'Pain relief', time: '9:00 AM', dosage: '200mg' },
+        // { id: 3, imageSrc: '/images/s-l1200.webp', name: 'Ibuprofen', description: 'Pain relief', time: '11:00 AM', dosage: '200mg' },
+        // { id: 4, imageSrc: '/images/s-l1200.webp', name: 'Ibuprofen', description: 'Pain relief', time: '11:00 AM', dosage: '200mg' },
+        // { id: 5, imageSrc: '/images/s-l1200.webp', name: 'Ibuprofen', description: 'Pain relief', time: '11:00 AM', dosage: '200mg' },
+        // { id: 6, imageSrc: '/images/s-l1200.webp', name: 'Ibuprofen', description: 'Pain relief', time: '11:00 AM', dosage: '200mg' },
+        // { id: 7, imageSrc: '/images/s-l1200.webp', name: 'Ibuprofen', description: 'Pain relief', time: '11:00 AM', dosage: '200mg' },
 
     ];
     const [medData, setMedicationData] = useState(medicationData);
@@ -40,6 +40,8 @@ const DashboardLayout = ({
     const [time, setTime] = useState("")
     const [dosage, setDosage] = useState("")
     const [image, setImage] = useState<string | null>(null);
+
+    // const dbref = collection[db, 'drugs'];
     // Function to convert AM/PM time to 24-hour format
     const convertTo24HourFormat = (time: string) => {
         const [hour, minute, period] = time.split(/:| /);
@@ -56,32 +58,29 @@ const DashboardLayout = ({
         e.preventDefault();
 
         try {
-            if (image) {
-                const file = new File([image], image.name); // Create a File object with the correct type and name
 
-                // Upload the image file to Firebase Storage
-                const storageRef = ref(storage, `images/${file.name}`);
-                await uploadBytes(storageRef, file);
+            // Add the medication data to the medData state
+            setMedicationData([
+                ...medData,
+                {
+                    id: medData.length + 1,
+                    imageSrc: "/images/LPN05141.jpg",
+                    name: name,
+                    description: description,
+                    time: time,
+                    dosage: dosage,
+                },
+            ]);
 
-                // Get the download URL of the uploaded image
-                const downloadURL = await getDownloadURL(storageRef);
-
-                // Add the medication data to the medData state
-                setMedicationData([
-                    ...medData,
-                    {
-                        id: medData.length + 1,
-                        imageSrc: downloadURL,
-                        name: name,
-                        description: description,
-                        time: time,
-                        dosage: dosage,
-                    },
-                ]);
-
-                // Store the medication data in Firebase Firestore
-                storeDataToFirebase();
-            }
+            // Store the medication data in Firebase Firestore
+            storeDataToFirebase(
+                medData.length + 1,
+                "",
+                name,
+                description,
+                time,
+                dosage
+            );
         } catch (error) {
             console.error('Error adding medication data:', error);
         }
@@ -89,14 +88,12 @@ const DashboardLayout = ({
 
     // Initialize Firebase app
     const firebaseConfig = {
-        apiKey: "AIzaSyDaTHJahdGqnCMFNH8JtEUdNo97p8eglUw",
-        authDomain: "pushin-pill.firebaseapp.com",
-        databaseURL: "https://pushin-pill-default-rtdb.firebaseio.com",
-        projectId: "pushin-pill",
-        storageBucket: "pushin-pill.appspot.com",
-        messagingSenderId: "209811412566",
-        appId: "1:209811412566:web:9ec7be84d75f9cbf73cdf7",
-        measurementId: "G-7Z24F09YWE"
+        apiKey: "AIzaSyBkoj3P-bzyGlAc8EAe7DsLag6l0AvUgsE",
+        authDomain: "mypillbox-9367d.firebaseapp.com",
+        projectId: "mypillbox-9367d",
+        storageBucket: "mypillbox-9367d.appspot.com",
+        messagingSenderId: "521207572117",
+        appId: "1:521207572117:web:babbb812082e5d87b15d9c"
     };
 
     // Initialize Firebase
@@ -104,61 +101,112 @@ const DashboardLayout = ({
     const firestore = getFirestore();
     const storage = getStorage();
 
-    const storeDataToFirebase = async () => {
+    const addDrugDataToFirebaseFirestore = async (
+        id: number,
+        imageSrc: string,
+        name: string,
+        description: string,
+        time: string,
+        dosage: string
+    ): Promise<void> => {
         try {
             // Create a new collection in Firestore
-            const medicationsCollection = collection(firestore, 'medications');
+            const drugsCollection = collection(firestore, 'drugs');
 
-            // Loop through each medication in medData
-            for (const medication of medData) {
-                // Upload the image to Firebase Storage
-                const storageRef = ref(storage, `medicationImages/${medication.image.name}`);
-                await uploadBytes(storageRef, medication.image);
+            // Create a new document in Firestore with the drug data
+            await addDoc(drugsCollection, {
+                id,
+                imageSrc,
+                name,
+                description,
+                time,
+                dosage,
+            });
 
-                // Get the download URL of the uploaded image
-                const downloadURL = await getDownloadURL(storageRef);
+            console.log('Drug data added successfully to Firebase Firestore!');
+        } catch (error) {
+            console.error('Error adding drug data to Firebase Firestore:', error);
+            throw error;
+        }
+    };
 
-                // Create a new document in Firestore with the medication data
-                await addDoc(medicationsCollection, {
-                    name: medication.name,
-                    description: medication.description,
-                    time: medication.time,
-                    dosage: medication.dosage,
-                    image: downloadURL,
-                });
-            }
+    const storeDataToFirebase = async (
+        id: number,
+        imageSrc: string,
+        name: string,
+        description: string,
+        time: string,
+        dosage: string
+    ): Promise<void> => {
+        try {
+            // Upload the image to Firebase Storage
+            const downloadURL = await uploadImageToFirebaseStorage(imageSrc);
+            console.log("downloadURL:")
+            console.log(downloadURL);
+            // const downloadURL = "/images/LPN05141.jpg"
+            // Add the drug data to Firebase Firestore
+            await addDrugDataToFirebaseFirestore(id, downloadURL, name, description, time, dosage);
 
-            console.log('Data stored successfully in Firebase Firestore!');
+            // console.log('Data stored successfully in Firebase Firestore!');
         } catch (error) {
             console.error('Error storing data in Firebase Firestore:', error);
         }
     };
 
+
     const fetchMedicationDataFromFirebase = async () => {
+        // console.log('Fetching medication data from Firebase Firestore...');
         try {
-            // Create a reference to the "medications" collection in Firestore
-            const medicationsCollection = collection(firestore, 'medications');
+            // Create a reference to the "drugs" collection in Firestore
+            const medicationsCollection = collection(firestore, 'drugs');
 
             // Fetch all documents from the "medications" collection
             const querySnapshot = await getDocs(medicationsCollection);
 
+            // console.log(querySnapshot.docs);
+
             // Map the query snapshot to an array of medication objects
             const medicationData: { id: number; imageSrc: string; name: string; description: string; time: string; dosage: string; }[] = querySnapshot.docs.map((doc) => doc.data() as { id: number; imageSrc: string; name: string; description: string; time: string; dosage: string; });
+
+            //console log the medication data
+            // console.log(medicationData);
 
             // Update the medData state with the fetched medication data
             setMedicationData(medicationData);
 
-            console.log('Medication data fetched successfully from Firebase Firestore!');
+            // console.log('Medication data fetched successfully from Firebase Firestore!');
+            // return medicationData;
         } catch (error) {
             console.error('Error fetching medication data from Firebase Firestore:', error);
         }
     };
 
-    storeDataToFirebase();
+    const uploadImageToFirebaseStorage = async (imageSrc: string): Promise<string> => {
+        try {
+            // Convert the imageSrc string to a Blob
+            const blob = new Blob([imageSrc], { type: 'image/jpeg' });
+
+            // Upload the image to Firebase Storage
+            const storageRef = ref(storage, `drugImages/${imageSrc}`);
+            await uploadBytes(storageRef, blob);
+
+            // Get the download URL of the uploaded image
+            const downloadURL = await getDownloadURL(storageRef);
+
+            return downloadURL;
+        } catch (error) {
+            console.error('Error uploading image to Firebase Storage:', error);
+            throw error;
+        }
+    };
+
+    fetchMedicationDataFromFirebase();
+
+    //add new data to the react state
+    setMedicationData
 
 
     return (
-
         <div className="flex flex-col min-h-screen" >
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
@@ -177,7 +225,8 @@ const DashboardLayout = ({
 
             </div>
 
-
+            {/* call fetchMedicationDataFromFirebase */}
+            <button onClick={fetchMedicationDataFromFirebase}>Fetch Medication Data From Firebase</button>
 
             {/* list */}
             <div className="flex flex-col pl-6 pr-6">
