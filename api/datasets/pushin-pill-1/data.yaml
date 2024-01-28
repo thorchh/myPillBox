@@ -1,0 +1,62 @@
+names:
+- acetaminophen
+- advil
+- advil-gel
+- allerclear
+- altoid
+- duphaston
+- flatugel 6
+- lactrase
+- mefenamic-acid
+- midol
+- pancrelipase
+- pepto-bismol
+- slactone
+- spironolactone
+- tylenol
+- tylenol-er
+- vitamin
+nc: 17
+roboflow:
+  license: CC BY 4.0
+  project: pushin-pill
+  url: https://universe.roboflow.com/jason136/pushin-pill/dataset/1
+  version: 1
+  workspace: jason136
+path: ./pushin-pill-1
+test: images/test
+train: images/train
+val: images/val
+
+description
+"This description"
+(string)
+
+
+
+dosage
+"100mg"
+(string)
+
+
+
+id
+12313
+(number)
+
+
+
+imageSrc
+"asdasdas"
+(string)
+
+
+
+name
+"asdasdsa"
+(string)
+
+
+
+time
+"8:00AM"

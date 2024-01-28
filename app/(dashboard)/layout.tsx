@@ -137,6 +137,7 @@ const DashboardLayout = ({
     };
 
     const [selectedImage, setSelectedImage] = useState(null);
+    const [imageResponse, setImageResponse] = useState(null)
 
     const handleImageUpload = async (event:any) => {
         const file = event.target.files[0];
@@ -146,17 +147,23 @@ const DashboardLayout = ({
         await callAPI(file);
     };
 
-    function callAPI(file: any) {
+    async function callAPI(file: any) {
         const formData = new FormData();
         formData.append('file', file);
 
-        fetch('/predict', {
+        const response = await fetch('/api/predict', {
             method: 'POST',
-            body: formData
-        })
-            .then(response => response.json())
-            .then(data => console.log(data))
-            .catch(error => console.error('Error:', error));
+            body: formData,
+        });
+
+        if (!response.ok) {
+            console.log('Error');
+            return;
+        }
+
+        const data = await response.json();
+        console.log(data);
+        setImageResponse(data);
     }
 
     const storeDataToFirebase = async (
