@@ -34,32 +34,31 @@ const DashboardLayout = ({
 
             
             {/* list */}
-            <div className="flex flex-col pl-6">
+            <div className="flex flex-col pl-6 pr-6">
 
                 {/* text and see all */}
                 <div className="flex flex-row justify-between">
                     <div className="text-gray-900 text-base font-semibold font-['Inter']">Your Medication</div>
-                    <div className="pr-6 text-teal-600 text-xs font-normal font-['Inter']">See all</div>
+                    <div className="text-teal-600 text-xs font-normal font-['Inter']">See all</div>
                 </div>
                 
                 {/* card */}
-                <div className="flex flex-row w-full h-[125px] border rounded-lg border-emerald-50">
+                <div className="flex flex-row pr-6 h-[125px] border rounded-lg border-emerald-50">
                     <div className="MedImage pl-1.5 pt-1.5 pr-1.5 pb-1.5">
                         <img className=" rounded-lg w-[110px] h-[110px]" src="https://via.placeholder.com/125x125" />
                     </div>
                     
-                    <div className="flex flex-col justify-around">
+                    <div className="pl-1 flex flex-col">
                         {/* name & description */}
-                        <div className="DrugName text-gray-900 text-lg font-semibold font-['Inter']">Lisinopril</div>
-                        <div className="Description w-[129px] h-[15px] text-zinc-400 text-xs font-medium font-['Inter']">High blood pressure</div>
+                        <div className="DrugName w-full pt-4 pb-0.5 text-gray-900 text-lg font-semibold font-['Inter']">Lisinopril</div>
+                        <div className="DrugDescription w-full pb-0.5 text-zinc-400 text-xs font-medium font-['Inter']">High blood pressure</div>
                         
                         {/* time */}
-                        <div className="flex GreenBox h-[18px] mx-auto bg-emerald-50 rounded-sm">
+                        <div className="flex GreenBox h-[18px] bg-emerald-50 rounded-sm">
                             <img className="w-[11px] h-[11px] " src="https://via.placeholder.com/11x10" />
                             <div className=" text-teal-600 text-xs font-medium font-['Inter']">9:00 AM</div>
                         </div>
                     </div>
-                    
                 </div>
                     
                 <div className="flex w-6 h-6 justify-center items-center">
