@@ -1,5 +1,5 @@
 import React from 'react';
-import MedicationCard from "@/components/ui/medicationCard";
+import MedicationCard from "@/components/ui/MedicationCard";
 
 const DashboardLayout = ({
     children
@@ -42,7 +42,7 @@ const DashboardLayout = ({
             <div className="pl-6 pt-10 pb-6 pr-6">
 
                 {/* header */}
-                <div className="text-gray-900 text-[24px] font-semibold font-['Inter']">
+                <div className="text-gray-900 text-[24px] font-bold font-['Inter']">
                     Simplify Medication - <br/>Trust Medication
                 </div>
                     
