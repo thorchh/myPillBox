@@ -14,7 +14,7 @@
 
 
 ### Inspiration 💡
-Medical errors are a critical concern in healthcare, especially after patients leave the hospital. The myPillBox project was born out of the necessity to leverage technology in reducing such errors. Recognizing the challenges faced by both healthcare professionals and patients, we aimed to create a solution that empowers users to manage their medications effectively.
+Medical errors are a critical concern in healthcare, especially after patients leave the hospital. The myPillBox project was born out of the necessity to leverage technology to reduce such errors. Recognizing the challenges faced by both healthcare professionals and patients, we aimed to create a solution that empowers users to manage their medications effectively.
 
 ### What it does 🚀
 myPillBox is a comprehensive medication management platform with three key features: Pillbox, Pillvision, and User Profile.
